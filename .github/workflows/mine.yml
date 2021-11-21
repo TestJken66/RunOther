@@ -25,40 +25,48 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      
+      - name: t
+        shell: bash
+        run: echo "hekko"
 
-      - name: Gradle cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+#       - name: Gradle cache
+#         uses: actions/cache@v2
+#         with:
+#           path: |
+#             ~/.gradle/caches
+#             ~/.gradle/wrapper
+#           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-      - name: AVD cache
-        uses: actions/cache@v2
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+#       - name: AVD cache
+#         uses: actions/cache@v2
+#         id: avd-cache
+#         with:
+#           path: |
+#             ~/.android/avd/*
+#             ~/.android/adb*
+#           key: avd-${{ matrix.api-level }}
 
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: |
-            echo "Generated AVD snapshot for caching."
-            git clone https://oauth2:${{ secrets.GTOKEN }}@github.com/hhhaiai/FastUploadId.git
-            if [ $# == 0 ]; then
-              echo "下载成功..."
-              ls
-              echo "进入查看..."
-              cd FastUploadId
-              ls
-            fi
+#       - name: create AVD and generate snapshot for caching
+#         if: steps.avd-cache.outputs.cache-hit != 'true'
+#         uses: reactivecircus/android-emulator-runner@v2
+#         with:
+#           api-level: ${{ matrix.api-level }}
+#           force-avd-creation: false
+#           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#           disable-animations: false
+#           script: echo "Generated AVD snapshot for caching."
 
+#       - name: Build PROJECT
+#           run: |
+#             git clone https://oauth2:${{ secrets.GTOKEN }}@github.com/hhhaiai/FastUploadId.git
+#             echo "===============下载成功==============="
+#             ls
+#             echo "===============进入【FastUploadId】查看==============="
+#             cd FastUploadId
+#             ls
+#             chmod -R 777 *
+#             git config core.filemode false
+#             ./gradlew build
+#             echo "===============编译完成==============="
+#             ls
