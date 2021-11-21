@@ -114,6 +114,6 @@ jobs:
             ${ANDROID_HOME}/platform-tools/adb install -r ./app2.apk
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
-            sleep  10 
+            sleep  30 
             
 
