@@ -113,7 +113,7 @@ jobs:
             adb shell dumpsys activity|grep mResume
             echo "=============安装1完毕,查看安装列表================"
             adb shell pm list package
-            sleep  30 
+            sleep  120 
             echo "====================安装并测试2======================"
             adb install -r ./app2.apk
             adb shell am start -n me.hhhaiai.fastuploadid.app1/me.hhhaiai.fastuploadid.MainActivity
@@ -121,6 +121,6 @@ jobs:
             adb shell dumpsys activity|grep mResume
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
-            sleep  30 
+            sleep  120 
             
 
