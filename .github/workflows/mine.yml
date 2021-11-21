@@ -65,31 +65,49 @@ jobs:
          echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
          echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
          ls
+         rm -rf FastUploadId/
+         echo "sleep path:  $(which sleep)"
 
-#       - name: Gradle cache
-#         uses: actions/cache@v2
-#         with:
-#           path: |
-#             ~/.gradle/caches
-#             ~/.gradle/wrapper
-#           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+      - name: Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-#       - name: AVD cache
-#         uses: actions/cache@v2
-#         id: avd-cache
-#         with:
-#           path: |
-#             ~/.android/avd/*
-#             ~/.android/adb*
-#           key: avd-${{ matrix.api-level }}
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
 
-#       - name: create AVD and generate snapshot for caching
-#         if: steps.avd-cache.outputs.cache-hit != 'true'
-#         uses: reactivecircus/android-emulator-runner@v2
-#         with:
-#           api-level: ${{ matrix.api-level }}
-#           force-avd-creation: false
-#           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-#           disable-animations: false
-#           script: echo "Generated AVD snapshot for caching."
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: |
+            echo "Generated AVD snapshot for caching."
+            echo "====================查看设备======================"
+            ${ANDROID_HOME}/platform-tools/adb devices
+            echo "====================安装并测试1======================"
+            apkpath=`find . -name "*app1Debug*.apk"`
+            ${ANDROID_HOME}/platform-tools/adb install -r $apkpath
+            echo "=============安装1完毕,查看安装列表================"
+            ${ANDROID_HOME}/platform-tools/adb shell pm list package
+            sleep  30 
+            echo "====================安装并测试2======================"
+            apkpath=`find . -name "*app2Debug*.apk"`
+            ${ANDROID_HOME}/platform-tools/adb install -r $apkpath
+            echo "=============安装2完毕,查看安装列表================"
+            ${ANDROID_HOME}/platform-tools/adb shell pm list package
+            sleep  10 
+            
 
