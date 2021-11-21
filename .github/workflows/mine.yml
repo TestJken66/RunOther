@@ -41,6 +41,17 @@ jobs:
          ./gradlew build
          echo "===============编译完成==============="
          ls
+         apkpath=`find zip -name "*app1Debug*.apk"`
+         cp $apkpath ../
+         echo "拷贝1完毕"
+         apkpath=`find zip -name "*app2Debug*.apk"`
+         cp $apkpath ../
+         echo "拷贝2完毕"
+         cd ..
+         echo "==========拷贝完毕====="
+         echo "路径: $(pwd)"
+         ls
+         
 
 #       - name: Gradle cache
 #         uses: actions/cache@v2
