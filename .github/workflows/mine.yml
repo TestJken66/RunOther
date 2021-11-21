@@ -34,6 +34,7 @@ jobs:
          echo "++++++++++++++++++++Build project+++++++++++++++++++++++++++++"
          echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
          echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
+         echo "-----ANDROID_HOME:-${ANDROID_HOME}"
          git clone https://oauth2:${{ secrets.GTOKEN }}@github.com/hhhaiai/FastUploadId.git
          echo "===============下载成功==============="
          ls
@@ -95,6 +96,8 @@ jobs:
           disable-animations: false
           script: |
             echo "Generated AVD snapshot for caching."
+            echo "====================查看当前目录======================"
+            ls
             echo "====================查看设备======================"
             ${ANDROID_HOME}/platform-tools/adb devices
             echo "====================安装并测试1======================"
