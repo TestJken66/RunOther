@@ -98,20 +98,27 @@ jobs:
             echo "Generated AVD snapshot for caching."
             echo "ANDROID_HOME path: ${ANDROID_HOME}"
             echo "adb path: ${ANDROID_HOME}/platform-tools/adb "
+            alias adb="${ANDROID_HOME}/platform-tools/adb"
             echo "====================查看当前目录======================"
             ls
             echo "====================查看设备======================"
-            ${ANDROID_HOME}/platform-tools/adb devices
+            adb devices
             echo "====================安装并测试1======================"
             apkpath=$(find . -name "*app1Debug*.apk")
             echo "app1 path: ${apkpath}"
             echo "install commond: ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}"
-            ${ANDROID_HOME}/platform-tools/adb install -r ./app1.apk
+            adb install -r ./app1.apk
+            adb shell am start -n me.hhhaiai.fastuploadid.app1/me.hhhaiai.fastuploadid.MainActivity
+            echo "=============安装1完毕,当前页面================"
+            adb shell dumpsys activity|grep mResume
             echo "=============安装1完毕,查看安装列表================"
-            ${ANDROID_HOME}/platform-tools/adb shell pm list package
+            adb shell pm list package
             sleep  30 
             echo "====================安装并测试2======================"
-            ${ANDROID_HOME}/platform-tools/adb install -r ./app2.apk
+            adb install -r ./app2.apk
+            adb shell am start -n me.hhhaiai.fastuploadid.app1/me.hhhaiai.fastuploadid.MainActivity
+            echo "=============安装2完毕,当前页面================"
+            adb shell dumpsys activity|grep mResume
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  30 
