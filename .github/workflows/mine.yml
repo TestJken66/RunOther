@@ -102,13 +102,17 @@ jobs:
             ${ANDROID_HOME}/platform-tools/adb devices
             echo "====================安装并测试1======================"
             apkpath=`find . -name "*app1Debug*.apk"`
-            ${ANDROID_HOME}/platform-tools/adb install -r $apkpath
+            echo "app1 path: ${apkpath}"
+            echo "ANDROID_HOME path: ${ANDROID_HOME}/platform-tools/adb  --->`${ANDROID_HOME}/platform-tools/adb`"
+            echo "adb path: ${ANDROID_HOME}"
+            echo "install commond: ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}"
+            ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}
             echo "=============安装1完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  30 
             echo "====================安装并测试2======================"
             apkpath=`find . -name "*app2Debug*.apk"`
-            ${ANDROID_HOME}/platform-tools/adb install -r $apkpath
+            ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  10 
