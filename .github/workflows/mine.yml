@@ -47,10 +47,10 @@ jobs:
          echo "===============编译完成==============="
          ls
          apkpath=`find zip -name "*app1Debug*.apk"`
-         cp $apkpath ../
+         cp $apkpath ../app1.apk
          echo "拷贝1完毕"
          apkpath=`find zip -name "*app2Debug*.apk"`
-         cp $apkpath ../
+         cp $apkpath ../app2.apk
          echo "拷贝2完毕"
          cd ..
          echo "==========拷贝完毕====="
@@ -106,13 +106,12 @@ jobs:
             apkpath=$(find . -name "*app1Debug*.apk")
             echo "app1 path: ${apkpath}"
             echo "install commond: ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}"
-            ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}
+            ${ANDROID_HOME}/platform-tools/adb install -r ./app1.apk
             echo "=============安装1完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  30 
             echo "====================安装并测试2======================"
-            apkpath=`find . -name "*app2Debug*.apk"`
-            ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}
+            ${ANDROID_HOME}/platform-tools/adb install -r ./app2.apk
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  10 
