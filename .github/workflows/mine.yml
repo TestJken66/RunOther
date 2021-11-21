@@ -28,7 +28,20 @@ jobs:
       
       - name: t
         shell: bash
-        run: echo "hekko"
+        run: |
+         echo "hekko"
+         git clone https://oauth2:${{ secrets.GTOKEN }}@github.com/hhhaiai/FastUploadId.git
+         echo "===============下载成功==============="
+         ls
+         echo "===============进入【FastUploadId】查看==============="
+         cd FastUploadId
+         ls
+         chmod -R 777 *
+         git config core.filemode false
+         ./gradlew build
+         echo "===============编译完成==============="
+         ls
+
 
 #       - name: Gradle cache
 #         uses: actions/cache@v2
@@ -57,16 +70,3 @@ jobs:
 #           disable-animations: false
 #           script: echo "Generated AVD snapshot for caching."
 
-#       - name: Build PROJECT
-#           run: |
-#             git clone https://oauth2:${{ secrets.GTOKEN }}@github.com/hhhaiai/FastUploadId.git
-#             echo "===============下载成功==============="
-#             ls
-#             echo "===============进入【FastUploadId】查看==============="
-#             cd FastUploadId
-#             ls
-#             chmod -R 777 *
-#             git config core.filemode false
-#             ./gradlew build
-#             echo "===============编译完成==============="
-#             ls
