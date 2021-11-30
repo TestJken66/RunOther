@@ -1,23 +1,25 @@
-name: runapp-ci
+name: x86-default-test
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  # run every 1 hour
-#   schedule:
-#     #   分 时 日 月 周
-#     - cron: '0 */1 * * *'
 
 jobs:
-  test:
+
+  x86-default-test:
     runs-on: macOS-11
     #runs-on: ubuntu-latest
     strategy:
       matrix:
-        #api-level: [21, 22, 23, 24, 25, 26, 27, 28, 29]
-        api-level: [ 21 ]
+        #api-level: [15, 16, 17, 18,19, 21, 22, 23, 24, 25, 26, 27, 28, 29 ]
+        # failed version
+        #api-level: [19]
+        # not check version
+        #api-level: [ ]
+        #success version
+        api-level: [15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 29 ]
+        target: [default]
+        arch: [x86]
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
@@ -25,7 +27,8 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      
+          cache: gradle
+
       - name: Build project
         shell: bash
         run: |
@@ -56,7 +59,6 @@ jobs:
          echo "==========拷贝完毕====="
          echo "路径: $(pwd)"
          ls
-         
       - name: cat dir
         shell: bash
         run: |
@@ -69,42 +71,16 @@ jobs:
          rm -rf FastUploadId/
          echo "sleep path:  $(which sleep)"
 
-      - name: Gradle cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
-
-      - name: AVD cache
-        uses: actions/cache@v2
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
+      - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          cores: 2
-          ram-size: 4086MB
-          #emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          target: ${{ matrix.target }}
+          arch: ${{ matrix.arch }}
+          profile: Nexus 6
+          avd-name: ${{ matrix.api-level }}-${{ matrix.target }}-${{ matrix.arch }}
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            echo "Generated AVD snapshot for caching."
-            echo "ANDROID_HOME path: ${ANDROID_HOME}"
-            echo "adb path: ${ANDROID_HOME}/platform-tools/adb "
-            alias adb="${ANDROID_HOME}/platform-tools/adb"
-            echo "====================查看当前目录======================"
-            ls
-            echo "====================查看设备======================"
-            adb devices
             echo "====================安装并测试1======================"
             apkpath=$(find . -name "*app1Debug*.apk")
             echo "app1 path: ${apkpath}"
@@ -124,5 +100,3 @@ jobs:
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  120 
-            
-
