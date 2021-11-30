@@ -42,11 +42,8 @@ jobs:
          ./gradlew build
          echo "===============编译完成==============="
          ls
-         apkpath=`find zip -name "*app1Debug*.apk"`
-         cp $apkpath ../app1.apk
-         echo "拷贝1完毕"
-         apkpath=`find zip -name "*app2Debug*.apk"`
-         cp $apkpath ../app2.apk
+         apkpath=`find zip -name "*highmainfestRelease*"`
+         cp $apkpath ../app_hig.apk
          echo "拷贝2完毕"
          cd ..
          echo "==========拷贝完毕====="
@@ -73,32 +70,16 @@ jobs:
           avd-name: ${{ matrix.api-level }}-${{ matrix.target }}-${{ matrix.arch }}
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            echo "Generated AVD snapshot for caching."
-            echo "ANDROID_HOME path: ${ANDROID_HOME}"
-            echo "adb path: ${ANDROID_HOME}/platform-tools/adb "
-            alias adb="${ANDROID_HOME}/platform-tools/adb"
-            echo "====================查看当前目录======================"
             ls
-            echo "====================查看设备======================"
-            adb devices
-            echo "====================安装并测试1======================"
-            apkpath=$(find . -name "*app1Debug*.apk")
-            echo "app1 path: ${apkpath}"
-            echo "install commond: ${ANDROID_HOME}/platform-tools/adb install -r ${apkpath}"
-            adb install -r ./app1.apk
-            adb shell am start -n me.hhhaiai.fastuploadid.app1/me.hhhaiai.fastuploadid.MainActivity
-            echo "=============安装1完毕,当前页面================"
-            adb shell dumpsys activity|grep mResume
-            echo "=============安装1完毕,查看安装列表================"
-            adb shell pm list package
-            sleep  120 
-            echo "====================安装并测试2======================"
-            adb install -r ./app2.apk
-            adb shell am start -n me.hhhaiai.fastuploadid.app1/me.hhhaiai.fastuploadid.MainActivity
+            echo "====================安装并测试highmainfestRelease======================"
+            adb install -r ./app_hig.apk
+            adb shell am start -n me.hhhaiai.fastuploadid.highmainfest/me.hhhaiai.fastuploadid.MainActivity
+            sleep 5
             echo "=============安装2完毕,当前页面================"
             adb shell dumpsys activity|grep mResume
             echo "=============安装2完毕,查看安装列表================"
             ${ANDROID_HOME}/platform-tools/adb shell pm list package
             sleep  120 
-            
+            rm -rf ~/.android/avd/*
+
 
