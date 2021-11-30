@@ -1,4 +1,4 @@
-name: [runapp]ci
+name: runapp-ci
 
 on:
   push:
